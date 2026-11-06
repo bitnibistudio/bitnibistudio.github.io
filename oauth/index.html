@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Volviendo al panel · Bit y Nibi</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main>
+<h1>Volviendo al panel…</h1>
+<p id="msg" class="muted">Esta página solo devuelve el permiso al panel de Bit y Nibi, en el propio ordenador del equipo. No guarda nada.</p>
+</main>
+<script>
+// Las redes exigen una dirección https fija para volver; el panel vive en 127.0.0.1.
+// El `state` lo emite el panel con la forma red.puerto.aleatorio; el panel lo comprueba (un solo uso, 10 min).
+(function () {
+  var q = new URLSearchParams(location.search);
+  var m = /^(tiktok|instagram|facebook|youtube)\.(\d{4,5})\.[A-Za-z0-9_-]{20,}$/.exec(q.get('state') || '');
+  var port = m ? Number(m[2]) : 0;
+  if (!m || port < 1024 || port > 65535) {
+    document.getElementById('msg').textContent = 'Este enlace no viene del panel de Bit y Nibi. Cierra esta pestaña.';
+    return;
+  }
+  location.replace('http://127.0.0.1:' + port + '/oauth/' + m[1] + '/callback' + location.search);
+})();
+</script>
+</body>
+</html>
