@@ -19,6 +19,10 @@
   var q = new URLSearchParams(location.search);
   var m = /^(tiktok|instagram|facebook|youtube)\.(\d{4,5})\.[A-Za-z0-9_-]{20,}$/.exec(q.get('state') || '');
   var port = m ? Number(m[2]) : 0;
+  if (!m && (q.get('error_message') || q.get('error_description'))) {
+    document.getElementById('msg').textContent = 'La red respondió: ' + (q.get('error_message') || q.get('error_description')) + ' Cierra esta pestaña y vuelve a intentarlo desde el panel.';
+    return;
+  }
   if (!m || port < 1024 || port > 65535) {
     document.getElementById('msg').textContent = 'Este enlace no viene del panel de Bit y Nibi. Cierra esta pestaña.';
     return;
